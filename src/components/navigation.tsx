@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { BarChart3, CreditCard, Target, Menu } from "lucide-react"
 import { useState } from "react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import LogoIcon from "./ui/logoIcon"
 import { ThemeToggle } from "./themeToggle"
 import { LottieSafeWrapper } from "./lottie-safe-wrapper"
 const navigation = [
@@ -60,7 +59,7 @@ export function Navigation() {
             <SheetContent side="left" className="pr-0">
                 <Link href="/" className="flex items-center space-x-2" onClick={() => setOpen(false)}>
                 <BarChart3 className="h-6 w-6" />
-                <span className="font-bold">Finance Visualizer</span>
+                <span className="font-bold">TrueBalance</span>
                 </Link>
                 <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
                     <div className="flex flex-col space-y-3">
