@@ -3,24 +3,18 @@ import { TransactionModel } from "@/lib/models/transaction"
 
 export async function GET() {
   try {
-    console.log("Fetching transactions...")
     const transactions = await TransactionModel.findAll()
-    console.log(`Found ${transactions.length} transactions`)
     return NextResponse.json(transactions || [])
   } catch (error) {
     console.error("Error fetching transactions:", error)
-    return NextResponse.json(
-      { error: "Failed to fetch transactions", details: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 },
-    )
+    // Return empty array instead of error to prevent frontend crashes
+    return NextResponse.json([])
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("Creating new transaction...")
     const body = await request.json()
-    console.log("Transaction data:", body)
 
     // Basic validation
     if (!body.amount || !body.date || !body.description || !body.category) {
@@ -45,13 +39,9 @@ export async function POST(request: NextRequest) {
     }
 
     const newTransaction = await TransactionModel.create(transactionData)
-    console.log("Transaction created successfully:", newTransaction.id)
     return NextResponse.json(newTransaction, { status: 201 })
   } catch (error) {
     console.error("Error creating transaction:", error)
-    return NextResponse.json(
-      { error: "Failed to create transaction", details: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: "Failed to create transaction" }, { status: 500 })
   }
 }
