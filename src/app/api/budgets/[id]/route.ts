@@ -1,29 +1,27 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { BudgetModel } from "@/lib/models/budget"
 
-
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    type BudgetUpdate = {
-        category?: string;
-        amount?: number;
-        month?: string;
-    };
+export async function PUT(request: NextRequest) {
     try {
+        const url = new URL(request.url)
+        const id = url.pathname.split("/").pop() || ""
         const body = await request.json()
-        if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return NextResponse.json({ error: "Invalid budget ID" }, { status: 400 })
         }
+
         if (body.amount !== undefined && (isNaN(Number(body.amount)) || Number(body.amount) <= 0)) {
             return NextResponse.json({ error: "Amount must be a positive number" }, { status: 400 })
         }
+
         if (body.month && !body.month.match(/^\d{4}-\d{2}$/)) {
             return NextResponse.json({ error: "Month must be in YYYY-MM format" }, { status: 400 })
         }
-        const updates: BudgetUpdate = {}
+        const updates: any = {}
         if (body.category) updates.category = body.category
         if (body.amount !== undefined) updates.amount = Number(body.amount)
         if (body.month) updates.month = body.month
-        const updatedBudget = await BudgetModel.updateById(params.id, updates)
+        const updatedBudget = await BudgetModel.updateById(id, updates)
         if (!updatedBudget) {
             return NextResponse.json({ error: "Budget not found" }, { status: 404 })
         }
@@ -33,12 +31,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         return NextResponse.json({ error: "Failed to update budget" }, { status: 500 })
     }
 }
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest) {
     try {
-        if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        const url = new URL(request.url)
+        const id = url.pathname.split("/").pop() || ""
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return NextResponse.json({ error: "Invalid budget ID" }, { status: 400 })
         }
-        const deleted = await BudgetModel.deleteById(params.id)
+        const deleted = await BudgetModel.deleteById(id)
         if (!deleted) {
             return NextResponse.json({ error: "Budget not found" }, { status: 404 })
         }

@@ -1,16 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { TransactionModel } from "@/lib/models/transaction"
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    type TransactionUpdate = {
-        amount?: number;
-        date?: string;
-        description?: string;
-        category?: string;
-    };
+export async function PUT(request: NextRequest) {
     try {
+        const url = new URL(request.url)
+        const id = url.pathname.split("/").pop() || ""
         const body = await request.json()
-        if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return NextResponse.json({ error: "Invalid transaction ID" }, { status: 400 })
         }
         if (body.amount !== undefined && (isNaN(Number(body.amount)) || Number(body.amount) <= 0)) {
@@ -19,12 +15,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         if (body.date && !Date.parse(body.date)) {
             return NextResponse.json({ error: "Invalid date format" }, { status: 400 })
         }
-        const updates: TransactionUpdate = {}
+        const updates: any = {}
         if (body.amount !== undefined) updates.amount = Number(body.amount)
         if (body.date) updates.date = body.date
         if (body.description) updates.description = body.description.trim()
         if (body.category) updates.category = body.category
-        const updatedTransaction = await TransactionModel.updateById(params.id, updates)
+        const updatedTransaction = await TransactionModel.updateById(id, updates)
         if (!updatedTransaction) {
             return NextResponse.json({ error: "Transaction not found" }, { status: 404 })
         }
@@ -34,12 +30,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         return NextResponse.json({ error: "Failed to update transaction" }, { status: 500 })
     }
 }
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest) {
     try {
-        if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        const url = new URL(request.url)
+        const id = url.pathname.split("/").pop() || ""
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return NextResponse.json({ error: "Invalid transaction ID" }, { status: 400 })
         }
-        const deleted = await TransactionModel.deleteById(params.id)
+        const deleted = await TransactionModel.deleteById(id)
         if (!deleted) {
             return NextResponse.json({ error: "Transaction not found" }, { status: 404 })
         }
