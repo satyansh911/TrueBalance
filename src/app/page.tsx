@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { PlusCircle, DollarSign, TrendingUp, Calendar, PieChart } from "lucide-react"
+import { PlusCircle} from "lucide-react"
 import Link from "next/link"
 import { MonthlyExpensesChart } from "@/components/monthlyExpenseChart"
 import { CategoryPieChart } from "@/components/categoryPieChart"
