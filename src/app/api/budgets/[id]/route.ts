@@ -1,6 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { BudgetModel } from "@/lib/models/budget"
 
+interface BudgetUpdate {
+    category?: string
+    amount?: number
+    month?: string
+}
+
 export async function PUT(request: NextRequest) {
     try {
         const url = new URL(request.url)
@@ -9,15 +15,13 @@ export async function PUT(request: NextRequest) {
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return NextResponse.json({ error: "Invalid budget ID" }, { status: 400 })
         }
-
         if (body.amount !== undefined && (isNaN(Number(body.amount)) || Number(body.amount) <= 0)) {
             return NextResponse.json({ error: "Amount must be a positive number" }, { status: 400 })
         }
-
         if (body.month && !body.month.match(/^\d{4}-\d{2}$/)) {
             return NextResponse.json({ error: "Month must be in YYYY-MM format" }, { status: 400 })
         }
-        const updates: any = {}
+        const updates: BudgetUpdate = {}
         if (body.category) updates.category = body.category
         if (body.amount !== undefined) updates.amount = Number(body.amount)
         if (body.month) updates.month = body.month

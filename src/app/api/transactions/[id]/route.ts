@@ -1,6 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { TransactionModel } from "@/lib/models/transaction"
 
+interface TransactionUpdate {
+    amount?: number
+    date?: string
+    description?: string
+    category?: string
+}
 export async function PUT(request: NextRequest) {
     try {
         const url = new URL(request.url)
@@ -15,7 +21,7 @@ export async function PUT(request: NextRequest) {
         if (body.date && !Date.parse(body.date)) {
             return NextResponse.json({ error: "Invalid date format" }, { status: 400 })
         }
-        const updates: any = {}
+        const updates: TransactionUpdate = {}
         if (body.amount !== undefined) updates.amount = Number(body.amount)
         if (body.date) updates.date = body.date
         if (body.description) updates.description = body.description.trim()
