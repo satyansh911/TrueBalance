@@ -1,6 +1,5 @@
 "use client"
 
-import { Player } from "@lottiefiles/react-lottie-player"
 import type React from "react"
 import { useState, useEffect } from "react"
 
@@ -10,16 +9,35 @@ interface Props {
 }
 
 const DeleteIcon: React.FC<Props> = ({ size = 24 }) => {
+  const [Player, setPlayer] = useState<any>(null)
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
-    setIsMounted(true)
+    // Dynamically import the Player component only on client side
+    const loadPlayer = async () => {
+      try {
+        const { Player: LottiePlayer } = await import("@lottiefiles/react-lottie-player")
+        setPlayer(() => LottiePlayer)
+        setIsMounted(true)
+      } catch (error) {
+        console.error("Failed to load Lottie player:", error)
+        setIsMounted(true) // Still set mounted to show fallback
+      }
+    }
+
+    loadPlayer()
   }, [])
 
-  if (!isMounted) {
+  // Always show fallback during SSR or if Player failed to load
+  if (!isMounted || !Player) {
     return (
-      <div style={{ height: size, width: size }} className="flex items-center justify-center bg-muted rounded-lg">
-        <span className="text-4xl">🔍</span>
+      <div
+        style={{ height: size, width: size }}
+        className="flex items-center justify-center bg-muted/20 rounded-lg animate-pulse"
+      >
+        <span style={{ fontSize: size * 0.4 }} className="text-muted-foreground">
+          🔍
+        </span>
       </div>
     )
   }
