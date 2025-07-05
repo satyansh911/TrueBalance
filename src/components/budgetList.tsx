@@ -27,31 +27,24 @@ export function BudgetList({ budgets, transactions, onEdit, onDelete }: BudgetLi
         .filter((t) => t.category === budget.category && t.date.startsWith(budget.month))
         .reduce((sum, t) => sum + t.amount, 0)
     }
-    const getProgressColor = (spent: number, budget: number) => {
-        const percentage = (spent / budget) * 100
-        if (percentage >= 100) return "bg-red-500"
-        if (percentage >= 80) return "bg-yellow-500"
-        return "bg-green-500"
-    }
     return (
         <div className="rounded-md border">
         <Table>
             <TableHeader>
-            <TableRow>
-                <TableHead>Category</TableHead>
-                <TableHead>Month</TableHead>
-                <TableHead>Budget</TableHead>
-                <TableHead>Spent</TableHead>
-                <TableHead>Progress</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
-            </TableRow>
+                <TableRow>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Month</TableHead>
+                    <TableHead>Budget</TableHead>
+                    <TableHead>Spent</TableHead>
+                    <TableHead>Progress</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="w-[100px]">Actions</TableHead>
+                </TableRow>
             </TableHeader>
             <TableBody>
             {budgets.map((budget) => {
                 const spent = getSpentAmount(budget)
                 const percentage = (spent / budget.amount) * 100
-                const remaining = budget.amount - spent
                 return (
                 <TableRow key={budget.id}>
                     <TableCell className="font-medium">{budget.category}</TableCell>
@@ -64,25 +57,25 @@ export function BudgetList({ budgets, transactions, onEdit, onDelete }: BudgetLi
                     <TableCell>${budget.amount.toFixed(2)}</TableCell>
                     <TableCell>${spent.toFixed(2)}</TableCell>
                     <TableCell className="w-[200px]">
-                    <div className="space-y-1">
-                        <Progress value={Math.min(percentage, 100)} className="h-2" />
-                        <p className="text-xs text-muted-foreground">{percentage.toFixed(1)}% used</p>
-                    </div>
+                        <div className="space-y-1">
+                            <Progress value={Math.min(percentage, 100)} className="h-2" />
+                            <p className="text-xs text-muted-foreground">{percentage.toFixed(1)}% used</p>
+                        </div>
                     </TableCell>
                     <TableCell>
-                    <Badge variant={percentage >= 100 ? "destructive" : percentage >= 80 ? "secondary" : "default"}>
-                        {percentage >= 100 ? "Over Budget" : percentage >= 80 ? "Near Limit" : "On Track"}
-                    </Badge>
+                        <Badge variant={percentage >= 100 ? "destructive" : percentage >= 80 ? "secondary" : "default"}>
+                            {percentage >= 100 ? "Over Budget" : percentage >= 80 ? "Near Limit" : "On Track"}
+                        </Badge>
                     </TableCell>
                     <TableCell>
-                    <div className="flex gap-2">
-                        <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
-                            <EditIcon/>
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => onDelete(budget.id)}>
-                            <DeleteIcon/>
-                        </Button>
-                    </div>
+                        <div className="flex gap-2">
+                            <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
+                                <EditIcon />
+                            </Button>
+                            <Button variant="ghost" size="sm" onClick={() => onDelete(budget.id)}>
+                                <DeleteIcon />
+                            </Button>
+                        </div>
                     </TableCell>
                 </TableRow>
                 )

@@ -2,12 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Edit, Trash2 } from "lucide-react"
 import type { Transaction } from "@/types"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import EditIcon from "./ui/editIcon"
 import DeleteIcon from "./ui/deleteIcon"
-
 interface TransactionListProps {
     transactions: Transaction[]
     onEdit: (transaction: Transaction) => void
@@ -16,10 +14,10 @@ interface TransactionListProps {
 export function TransactionList({ transactions, onEdit, onDelete }: TransactionListProps) {
     if (transactions.length === 0) {
         return (
-        <div className="text-center py-8">
-            <p className="text-muted-foreground">No transactions found.</p>
-            <p className="text-sm text-muted-foreground mt-1">Add your first transaction to get started.</p>
-        </div>
+            <div className="text-center py-8">
+                <p className="text-muted-foreground">No transactions found.</p>
+                <p className="text-sm text-muted-foreground mt-1">Add your first transaction to get started.</p>
+            </div>
         )
     }
     return (
@@ -45,12 +43,12 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
                             <TableCell className="text-right font-medium">${transaction.amount.toFixed(2)}</TableCell>
                             <TableCell>
                                 <div className="flex gap-2">
-                                <Button variant="ghost" size="sm" onClick={() => onEdit(transaction)}>
-                                    <EditIcon/>
-                                </Button>
-                                <Button variant="ghost" size="sm" onClick={() => onDelete(transaction.id)}>
-                                    <DeleteIcon/>
-                                </Button>
+                                    <Button variant="ghost" size="sm" onClick={() => onEdit(transaction)}>
+                                        <EditIcon />
+                                    </Button>
+                                    <Button variant="ghost" size="sm" onClick={() => onDelete(transaction.id)}>
+                                        <DeleteIcon />
+                                    </Button>
                                 </div>
                             </TableCell>
                         </TableRow>

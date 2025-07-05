@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { PlusCircle} from "lucide-react"
+import { PlusCircle } from "lucide-react"
 import Link from "next/link"
 import { MonthlyExpensesChart } from "@/components/monthlyExpenseChart"
 import { CategoryPieChart } from "@/components/categoryPieChart"
 import { RecentTransactions } from "@/components/recentTransactions"
-import type { Transaction, Budget } from "@/types"
+import type { Transaction } from "@/types"
 import CoinIcon from "@/components/ui/coinIcon"
 import CalendarIcon from "@/components/ui/calendarIcon"
 import PieChartIcon from "@/components/ui/pieChartIcon"
@@ -16,18 +16,15 @@ import TransactionsIcon from "@/components/ui/transactionsIcon"
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [budgets, setBudgets] = useState<Budget[]>([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetchData()
   }, [])
   const fetchData = async () => {
     try {
-      const [transactionsRes, budgetsRes] = await Promise.all([fetch("/api/transactions"), fetch("/api/budgets")])
+      const transactionsRes = await fetch("/api/transactions")
       const transactionsData = await transactionsRes.json()
-      const budgetsData = await budgetsRes.json()
       setTransactions(transactionsData)
-      setBudgets(budgetsData)
     } catch (error) {
       console.error("Error fetching data:", error)
     } finally {
@@ -61,7 +58,6 @@ export default function Dashboard() {
       </div>
     )
   }
-
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -80,7 +76,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-            <CoinIcon/>
+            <CoinIcon />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${totalExpenses.toFixed(2)}</div>
@@ -90,7 +86,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">This Month</CardTitle>
-            <CalendarIcon/>
+            <CalendarIcon />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${monthlyExpenses.toFixed(2)}</div>
@@ -100,7 +96,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Top Category</CardTitle>
-            <PieChartIcon/>
+            <PieChartIcon />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{topCategory}</div>
@@ -110,7 +106,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-            <TransactionsIcon/>
+            <TransactionsIcon />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{transactions.length}</div>

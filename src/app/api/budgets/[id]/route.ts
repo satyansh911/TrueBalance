@@ -1,7 +1,13 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { BudgetModel } from "@/lib/models/budget"
 
+
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+    type BudgetUpdate = {
+        category?: string;
+        amount?: number;
+        month?: string;
+    };
     try {
         const body = await request.json()
         if (!params.id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -13,7 +19,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         if (body.month && !body.month.match(/^\d{4}-\d{2}$/)) {
             return NextResponse.json({ error: "Month must be in YYYY-MM format" }, { status: 400 })
         }
-        const updates: any = {}
+        const updates: BudgetUpdate = {}
         if (body.category) updates.category = body.category
         if (body.amount !== undefined) updates.amount = Number(body.amount)
         if (body.month) updates.month = body.month
