@@ -1,5 +1,3 @@
-"use client"
-
 import { getDatabase } from "@/lib/mongodb"
 import type { Transaction } from "@/types"
 import { ObjectId } from "mongodb"
