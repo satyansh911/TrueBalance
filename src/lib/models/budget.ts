@@ -1,3 +1,5 @@
+"use client"
+
 import { getDatabase } from "@/lib/mongodb"
 import type { Budget } from "@/types"
 import { ObjectId } from "mongodb"
