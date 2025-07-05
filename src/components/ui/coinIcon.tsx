@@ -1,22 +1,30 @@
-"use client";
-import { Player } from "@lottiefiles/react-lottie-player";
-import { LucideProps } from "lucide-react";
-import React from "react";
+"use client"
 
-interface Props extends LucideProps {
-  size?: number;
-  isActive?: boolean;
+import { Player } from "@lottiefiles/react-lottie-player"
+import type React from "react"
+import { useState, useEffect } from "react"
+
+interface Props {
+  size?: number
+  isActive?: boolean
 }
 
-const CoinIcon: React.FC<Props> = ({ size = 30 }) => {
-  return (
-    <Player
-      autoplay
-      loop
-      src="/coin.json"
-      style={{ height: size, width: size }}
-    />
-  );
-};
+const CoinIcon: React.FC<Props> = ({ size = 24 }) => {
+  const [isMounted, setIsMounted] = useState(false)
 
-export default CoinIcon;
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return (
+      <div style={{ height: size, width: size }} className="flex items-center justify-center bg-muted rounded-lg">
+        <span className="text-4xl">🔍</span>
+      </div>
+    )
+  }
+
+  return <Player autoplay loop src="/coin.json" style={{ height: size, width: size }} />
+}
+
+export default CoinIcon
