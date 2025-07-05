@@ -9,10 +9,7 @@ import { MonthlyExpensesChart } from "@/components/monthlyExpenseChart"
 import { CategoryPieChart } from "@/components/categoryPieChart"
 import { RecentTransactions } from "@/components/recentTransactions"
 import type { Transaction } from "@/types"
-import CoinIcon from "@/components/ui/coinIcon"
-import CalendarIcon from "@/components/ui/calendarIcon"
-import PieChartIcon from "@/components/ui/pieChartIcon"
-import TransactionsIcon from "@/components/ui/transactionsIcon"
+import { LottieSafeWrapper } from "@/components/lottie-safe-wrapper"
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -76,7 +73,13 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-            <CoinIcon />
+            <LottieSafeWrapper 
+              src="/coin.json"
+              size={24}
+              autoplay={true}
+              loop={true}
+              fallbackIcon="🔍"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${totalExpenses.toFixed(2)}</div>
@@ -86,7 +89,13 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">This Month</CardTitle>
-            <CalendarIcon />
+            <LottieSafeWrapper 
+              src="/calendar.json"
+              size={24}
+              autoplay={true}
+              loop={true}
+              fallbackIcon="🔍"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">${monthlyExpenses.toFixed(2)}</div>
@@ -96,7 +105,13 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Top Category</CardTitle>
-            <PieChartIcon />
+            <LottieSafeWrapper 
+              src="/pieChart.json"
+              size={24}
+              autoplay={true}
+              loop={true}
+              fallbackIcon="🔍"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{topCategory}</div>
@@ -106,7 +121,13 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Transactions</CardTitle>
-            <TransactionsIcon />
+            <LottieSafeWrapper 
+              src="/transactions.json"
+              size={24}
+              autoplay={true}
+              loop={true}
+              fallbackIcon="🔍"
+            />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{transactions.length}</div>

@@ -6,6 +6,7 @@ import type { Transaction } from "@/types"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import EditIcon from "./ui/editIcon"
 import DeleteIcon from "./ui/deleteIcon"
+import { LottieSafeWrapper } from "./lottie-safe-wrapper"
 interface TransactionListProps {
     transactions: Transaction[]
     onEdit: (transaction: Transaction) => void
@@ -44,10 +45,22 @@ export function TransactionList({ transactions, onEdit, onDelete }: TransactionL
                             <TableCell>
                                 <div className="flex gap-2">
                                     <Button variant="ghost" size="sm" onClick={() => onEdit(transaction)}>
-                                        <EditIcon />
+                                        <LottieSafeWrapper 
+                                            src="/edit.json"
+                                            size={24}
+                                            autoplay={true}
+                                            loop={true}
+                                            fallbackIcon="🔍"
+                                        />
                                     </Button>
                                     <Button variant="ghost" size="sm" onClick={() => onDelete(transaction.id)}>
-                                        <DeleteIcon />
+                                        <LottieSafeWrapper 
+                                            src="/delete.json"
+                                            size={24}
+                                            autoplay={true}
+                                            loop={true}
+                                            fallbackIcon="🔍"
+                                        />
                                     </Button>
                                 </div>
                             </TableCell>

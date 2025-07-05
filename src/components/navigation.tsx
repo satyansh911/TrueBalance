@@ -9,6 +9,7 @@ import { useState } from "react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import LogoIcon from "./ui/logoIcon"
 import { ThemeToggle } from "./themeToggle"
+import { LottieSafeWrapper } from "./lottie-safe-wrapper"
 const navigation = [
     { name: "Dashboard", href: "/", icon: BarChart3 },
     { name: "Transactions", href: "/transactions", icon: CreditCard },
@@ -22,7 +23,13 @@ export function Navigation() {
         <div className="container flex h-14 items-center">
             <div className="mr-4 hidden md:flex">
             <Link href="/" className="relative right-5 mr-6 flex items-center space-x-2">
-                <LogoIcon/>
+                <LottieSafeWrapper 
+                    src="/logo.json"
+                    size={50}
+                    autoplay={true}
+                    loop={true}
+                    fallbackIcon="🔍"
+                />
                 <span className="hidden font-bold sm:inline-block text-[Poppins]">TrueBalance</span>
             </Link>
             <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -84,7 +91,13 @@ export function Navigation() {
             <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
                 <div className="w-full flex-1 md:w-auto md:flex-none">
                     <Link href="/" className="flex items-center space-x-2 md:hidden">
-                    <LogoIcon/>
+                    <LottieSafeWrapper 
+                        src="/logo.json"
+                        size={24}
+                        autoplay={true}
+                        loop={true}
+                        fallbackIcon="🔍"
+                    />
                     <span className="font-bold">TrueBalance</span>
                     </Link>
                 </div>

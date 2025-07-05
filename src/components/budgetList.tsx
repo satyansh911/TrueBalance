@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import type { Budget, Transaction } from "@/types"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import DeleteIcon from "./ui/deleteIcon"
-import EditIcon from "./ui/editIcon"
+import { LottieSafeWrapper } from "./lottie-safe-wrapper"
 interface BudgetListProps {
     budgets: Budget[]
     transactions: Transaction[]
@@ -70,10 +69,22 @@ export function BudgetList({ budgets, transactions, onEdit, onDelete }: BudgetLi
                     <TableCell>
                         <div className="flex gap-2">
                             <Button variant="ghost" size="sm" onClick={() => onEdit(budget)}>
-                                <EditIcon />
+                                <LottieSafeWrapper 
+                                    src="/edit.json"
+                                    size={24}
+                                    autoplay={true}
+                                    loop={true}
+                                    fallbackIcon="🔍"
+                                />
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => onDelete(budget.id)}>
-                                <DeleteIcon />
+                                <LottieSafeWrapper 
+                                    src="/delete.json"
+                                    size={24}
+                                    autoplay={true}
+                                    loop={true}
+                                    fallbackIcon="🔍"
+                                />
                             </Button>
                         </div>
                     </TableCell>
