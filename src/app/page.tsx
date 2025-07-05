@@ -3,36 +3,54 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
+import { PlusCircle, DollarSign, TrendingUp, Calendar, PieChart } from "lucide-react"
 import Link from "next/link"
 import { MonthlyExpensesChart } from "@/components/monthlyExpenseChart"
 import { CategoryPieChart } from "@/components/categoryPieChart"
 import { RecentTransactions } from "@/components/recentTransactions"
-import type { Transaction } from "@/types"
+import type { Transaction, Budget } from "@/types"
 import { LottieSafeWrapper } from "@/components/lottie-safe-wrapper"
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [budgets, setBudgets] = useState<Budget[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   useEffect(() => {
     fetchData()
   }, [])
+
   const fetchData = async () => {
     try {
-      const transactionsRes = await fetch("/api/transactions")
-      const transactionsData = await transactionsRes.json()
-      setTransactions(transactionsData)
+      setError(null)
+      const [transactionsRes, budgetsRes] = await Promise.all([
+        fetch("/api/transactions").catch(() => ({ ok: false, json: () => Promise.resolve([]) })),
+        fetch("/api/budgets").catch(() => ({ ok: false, json: () => Promise.resolve([]) })),
+      ])
+
+      const transactionsData = transactionsRes.ok ? await transactionsRes.json() : []
+      const budgetsData = budgetsRes.ok ? await budgetsRes.json() : []
+
+      // Ensure data is always an array
+      setTransactions(Array.isArray(transactionsData) ? transactionsData : [])
+      setBudgets(Array.isArray(budgetsData) ? budgetsData : [])
     } catch (error) {
       console.error("Error fetching data:", error)
+      setError("Failed to load data. Please check your database connection.")
+      setTransactions([])
+      setBudgets([])
     } finally {
       setLoading(false)
     }
   }
+
   const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0)
   const currentMonth = new Date().toISOString().slice(0, 7)
   const monthlyExpenses = transactions
     .filter((t) => t.date.startsWith(currentMonth))
     .reduce((sum, t) => sum + t.amount, 0)
+
   const categoryTotals = transactions.reduce(
     (acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + t.amount
@@ -40,7 +58,9 @@ export default function Dashboard() {
     },
     {} as Record<string, number>,
   )
+
   const topCategory = Object.entries(categoryTotals).sort(([, a], [, b]) => b - a)[0]?.[0] || "None"
+
   if (loading) {
     return (
       <div className="container mx-auto p-6">
@@ -55,6 +75,20 @@ export default function Dashboard() {
       </div>
     )
   }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-semibold mb-4">Connection Error</h2>
+          <p className="text-muted-foreground mb-6">{error}</p>
+          <Button onClick={fetchData}>Try Again</Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -69,6 +103,8 @@ export default function Dashboard() {
           </Link>
         </Button>
       </div>
+
+      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -86,6 +122,7 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground">All time expenses</p>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">This Month</CardTitle>
@@ -102,6 +139,7 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground">Current month expenses</p>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Top Category</CardTitle>
@@ -118,6 +156,7 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground">${(categoryTotals[topCategory] || 0).toFixed(2)} spent</p>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Transactions</CardTitle>
@@ -135,6 +174,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Charts */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -145,6 +186,7 @@ export default function Dashboard() {
             <MonthlyExpensesChart transactions={transactions} />
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>Expenses by Category</CardTitle>
@@ -155,6 +197,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Recent Transactions */}
       <Card>
         <CardHeader>
           <CardTitle>Recent Transactions</CardTitle>
