@@ -7,7 +7,7 @@ import { Navigation } from "@/components/navigation"
 
 const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
-  title: "Personal Finance Visualizer",
+  title: "TrueBalance",
   description: "Track and visualize your personal finances",
 }
 export default function RootLayout({
